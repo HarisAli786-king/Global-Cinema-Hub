@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { X, KeyRound, Lock } from "lucide-react";
-import { getApiKey, hasCustomKey } from "../lib/apiKey";
+import { hasCustomKey } from "../lib/apiKey";
 
 type Props = { onClose: () => void };
 
@@ -16,12 +16,6 @@ export function SettingsModal({ onClose }: Props) {
       document.body.style.overflow = "";
     };
   }, [onClose]);
-
-  const masked = (() => {
-    const k = getApiKey();
-    if (k.length <= 8) return "••••••••";
-    return `${k.slice(0, 4)}${"•".repeat(12)}${k.slice(-4)}`;
-  })();
 
   return (
     <div
@@ -53,21 +47,21 @@ export function SettingsModal({ onClose }: Props) {
           <label className="mb-2 block text-xs uppercase tracking-[0.2em] text-white/50">
             TMDB API Key
           </label>
-          <div className="relative">
-            <input
-              type="text"
-              value={masked}
-              readOnly
-              onSelect={(e) => e.preventDefault()}
-              className="w-full cursor-not-allowed select-none rounded-lg border border-white/10 bg-neutral-800 px-4 py-3 pr-12 font-mono text-sm text-white/50 outline-none"
-              style={{ userSelect: "none" }}
-            />
-            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/30">
-              <Lock className="h-5 w-5" />
-            </div>
+          <div
+            className="pointer-events-none flex select-none items-center gap-3 rounded-lg border border-white/10 bg-neutral-800 px-4 py-3"
+            style={{ userSelect: "none", WebkitUserSelect: "none", pointerEvents: "none" }}
+            aria-hidden="true"
+          >
+            <Lock className="h-5 w-5 flex-none text-white/30" />
+            <span
+              className="font-mono text-sm tracking-widest text-white/40"
+              style={{ userSelect: "none", WebkitUserSelect: "none" }}
+            >
+              ••••••••••••••••
+            </span>
           </div>
           <p className="mt-2 flex items-center gap-1.5 text-xs text-white/40">
-            <Lock className="h-3 w-3" /> Key is locked and read-only.
+            <Lock className="h-3 w-3" /> Key set &amp; locked.
             {usingCustom ? " Using your saved key." : " Using built-in default key."}
           </p>
         </div>
