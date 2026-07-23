@@ -1,4 +1,4 @@
-import { Settings, Film, Search, X, MessageCircle, Plus } from "lucide-react";
+import { Settings, Film, Search, X, MessageCircle, Plus, UserPlus, Sparkles } from "lucide-react";
 import type { User } from "../lib/auth";
 
 type Props = {
@@ -101,12 +101,16 @@ export function Header({
               />
             </button>
           ) : (
+            /* 🚀 Stylish Join Now Button */
             <button
               onClick={onSignIn}
-              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/90 transition hover:bg-white/15 md:text-sm"
+              className="relative group overflow-hidden rounded-full bg-gradient-to-r from-accent-red via-red-500 to-amber-500 p-[1px] font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105"
             >
-              <GoogleIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Sign In</span>
+              <span className="flex items-center gap-1.5 rounded-full bg-base-black/90 px-3.5 py-1.5 text-xs font-bold transition-all duration-300 group-hover:bg-transparent md:text-sm">
+                <UserPlus className="h-3.5 w-3.5 text-accent-red group-hover:text-white transition-colors" />
+                <span>Join Now</span>
+                <Sparkles className="h-3 w-3 text-amber-400 animate-pulse" />
+              </span>
             </button>
           )}
         </div>
