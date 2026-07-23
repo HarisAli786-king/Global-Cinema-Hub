@@ -1,4 +1,5 @@
 import type { Movie } from "../lib/supabase";
+import { Info, Play } from "lucide-react";
 
 type Props = {
   movie: Movie;
@@ -51,20 +52,25 @@ export function Hero({ movie, onMore }: Props) {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              onClick={onMore}
-              className="rounded-md bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90"
-            >
-              More Info
-            </button>
+            {/* 🟢 Watch Trailer Button (Safe for AdSense) */}
             <a
-              href={`https://www.google.com/search?q=${encodeURIComponent(movie.title + " movie watch")}`}
+              href={movie.trailer_url || `https://www.youtube.com/results?search_query=${encodeURIComponent(movie.title + " official trailer")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md border border-white/30 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white/20"
+              className="flex items-center gap-2 rounded-md bg-accent-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 shadow-lg shadow-accent-red/30"
             >
-              Watch
+              <Play className="h-4 w-4 fill-current" />
+              Watch Trailer
             </a>
+
+            {/* More Info Button */}
+            <button
+              onClick={onMore}
+              className="flex items-center gap-2 rounded-md border border-white/30 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              <Info className="h-4 w-4" />
+              More Info
+            </button>
           </div>
         </div>
       </div>
