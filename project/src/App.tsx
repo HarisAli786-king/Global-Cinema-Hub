@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import type { Movie } from "./types";
 import { trendingMovies, searchMovies } from "./lib/tmdb";
 import { CATEGORIES } from "./lib/categories";
-import { useAdsterraTrigger } from "./hooks/useAdsterraTrigger";
 import { useAuth } from "./hooks/useAuth";
 import { useFavorites } from "./hooks/useFavorites";
 import { useCustomMovies } from "./hooks/useCustomMovies";
@@ -17,6 +16,7 @@ import { SearchResults } from "./components/SearchResults";
 import { CommunityChat } from "./components/CommunityChat";
 import { AddMovieModal } from "./components/AddMovieModal";
 import { SignInPrompt } from "./components/SignInPrompt";
+import Footer from "./components/Footer";
 
 type Route = "home" | "community" | "category";
 
@@ -45,8 +45,6 @@ export default function App() {
   const [customKey, setCustomKey] = useState(0);
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useAdsterraTrigger();
 
   useEffect(() => {
     let cancelled = false;
@@ -121,7 +119,6 @@ export default function App() {
     window.scrollTo({ top: 0 });
   };
 
-  // Auth-gate helper: blocks an action if logged out and shows the prompt.
   const requireAuth = (msg?: string): boolean => {
     if (user) return true;
     setAuthPromptMsg(msg);
@@ -218,12 +215,8 @@ export default function App() {
             </main>
           )}
 
-          <footer className="border-t border-white/10 px-4 py-8 text-center text-xs text-white/40 md:px-10">
-            <p>Global Cinema Hub — curated films & series from around the world.</p>
-            <p className="mt-1">
-              Watch &amp; Download links open a Google Search for availability in your region.
-            </p>
-          </footer>
+          {/* 🟢 AdSense Policy Compliant Footer */}
+          <Footer />
         </>
       )}
 
