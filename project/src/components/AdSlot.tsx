@@ -1,41 +1,36 @@
+import { useEffect } from 'react';
 import type { AdSlotId } from '../types';
 
 interface AdSlotProps {
   id: AdSlotId;
-  label: string;
+  label?: string;
   className?: string;
   height?: string;
 }
 
-/**
- * GOOGLE ADSENSE PLACEHOLDER
- * -------------------------
- * Replace the inner content of this component with your Google AdSense
- * ad unit code. Each slot has a unique id for targeting.
- *
- * Example replacement:
- * <ins className="adsbygoogle"
- *   style={{ display: 'block' }}
- *   data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
- *   data-ad-slot="XXXXXXXXXX"
- *   data-ad-format="auto"
- *   data-full-width-responsive="true" />
- */
-export default function AdSlot({ id, label, className = '', height = 'h-24' }: AdSlotProps) {
+export default function AdSlot({ id, label = 'Advertisement', className = '' }: AdSlotProps) {
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error('AdSense load error:', err);
+    }
+  }, []);
+
   return (
-    <div
-      data-ad-slot-id={id}
-      className={`relative w-full ${height} rounded-xl border border-dashed border-cinema-fog/50 bg-cinema-coal/60 flex items-center justify-center overflow-hidden group ${className}`}
-    >
-      {/* GOOGLE ADSENSE: Replace this placeholder with your ad code for slot: {id} */}
-      <div className="flex flex-col items-center gap-1 text-cinema-fog/70 select-none">
-        <span className="text-[10px] uppercase tracking-[0.3em] font-semibold">{label}</span>
-        <span className="text-xs font-mono opacity-50">Ad Slot · {id}</span>
-        <span className="text-[10px] opacity-40 group-hover:opacity-70 transition-opacity">
-          Paste Google AdSense code here
-        </span>
-      </div>
-      <div className="absolute top-2 right-2 text-[9px] text-cinema-fog/40 font-mono">Ad</div>
+    <div className={`w-full my-4 flex flex-col items-center justify-center overflow-hidden text-center ${className}`}>
+      <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-cinema-fog/40 mb-1">
+        {label}
+      </span>
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', width: '100%' }}
+        data-ad-client="ca-pub-6550313871482375"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
     </div>
   );
 }
