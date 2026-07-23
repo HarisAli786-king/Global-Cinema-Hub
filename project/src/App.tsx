@@ -39,7 +39,7 @@ export default function App() {
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [authPromptMsg, setAuthPromptMsg] = useState<string | undefined>(undefined);
 
-  const { user, signIn, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const favorites = useFavorites();
   const customMovies = useCustomMovies();
   const [customKey, setCustomKey] = useState(0);
@@ -75,7 +75,7 @@ export default function App() {
       return;
     }
     setSearchLoading(true);
-    searchTimer.current = setTimeout(() => {
+    searchTimer.options = setTimeout(() => {
       searchMovies(searchQuery)
         .then((data) => {
           setSearchResults(data);
@@ -127,13 +127,20 @@ export default function App() {
   };
 
   const handleAddMovie = () => {
-    if (!requireAuth("Please Sign In with Google to add a custom movie.")) return;
+    if (!requireAuth("Please join to add a custom movie.")) return;
     setAddMovieOpen(true);
   };
 
-  const handlePromptSignIn = () => {
-    signIn();
+  // Updated to handle Name and Gender submission properly
+  const handlePromptSignIn = (userData: { name: string; gender: string }) => {
+    const customUser = {
+      name: userData.name,
+      gender: userData.gender,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.name}`,
+    };
+    localStorage.setItem("gch_user", JSON.stringify(customUser));
     setAuthPromptOpen(false);
+    window.location.reload();
   };
 
   return (
@@ -142,7 +149,7 @@ export default function App() {
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenAddMovie={handleAddMovie}
         user={user}
-        onSignIn={signIn}
+        onSignIn={() => requireAuth("Please join the community to continue.")}
         onSignOut={signOut}
         onSearch={setSearchQuery}
         searchActive={searchActive}
@@ -154,7 +161,7 @@ export default function App() {
       {route === "community" ? (
         <CommunityChat
           onRequireAuth={() =>
-            requireAuth("Please Sign In with Google to send a message in the community chat.")
+            requireAuth("Please join the community to send a message.")
           }
         />
       ) : route === "category" && categoryView ? (
@@ -215,7 +222,6 @@ export default function App() {
             </main>
           )}
 
-          {/* 🟢 AdSense Policy Compliant Footer */}
           <Footer />
         </>
       )}
@@ -225,7 +231,7 @@ export default function App() {
           movie={selected}
           onClose={() => setSelected(null)}
           onRequireAuth={() =>
-            requireAuth("Please Sign In with Google to post a comment.")
+            requireAuth("Please join to post a comment.")
           }
         />
       )}
