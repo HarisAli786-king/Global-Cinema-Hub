@@ -4,12 +4,12 @@ import {
   Star,
   Calendar,
   Clock,
-  Download,
   Play,
   Heart,
   Send,
   Tv,
   Lock,
+  Search,
 } from "lucide-react";
 import type { Movie, MovieDetails } from "../types";
 import { fetchMovieDetails, imgUrl } from "../lib/tmdb";
@@ -48,7 +48,7 @@ export function MovieModal({ movie, onClose, onRequireAuth }: Props) {
         if (!cancelled) setDetails(d);
       })
       .catch(() => {
-        // optional
+        // optional catch
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -69,15 +69,10 @@ export function MovieModal({ movie, onClose, onRequireAuth }: Props) {
   }, [onClose]);
 
   const title = movie.title;
-  const watchUrl = isCustom
-    ? movie.custom_watch_url ||
-      `https://www.google.com/search?q=${encodeURIComponent(title)}+watch+online`
-    : isTv
-    ? `https://www.google.com/search?q=${encodeURIComponent(title)}+watch+online`
-    : `https://www.google.com/search?q=Watch+${encodeURIComponent(title)}+full+movie+free+online`;
-  const downloadUrl = isTv
-    ? `https://www.google.com/search?q=${encodeURIComponent(title)}+download+episodes`
-    : `https://www.google.com/search?q=Download+${encodeURIComponent(title)}+movie+1080p`;
+  
+  // Safe links for AdSense Compliance (Official Trailer & Search)
+  const trailerUrl = movie.trailer_url || `https://www.youtube.com/results?search_query=${encodeURIComponent(title + " official trailer")}`;
+  const searchAvailabilityUrl = `https://www.google.com/search?q=${encodeURIComponent(title + " movie where to watch legal OTT")}`;
 
   const poster = (details?.poster_path ?? movie.poster_path)
     ? imgUrl(details?.poster_path ?? movie.poster_path, "w500")
@@ -215,8 +210,28 @@ export function MovieModal({ movie, onClose, onRequireAuth }: Props) {
               </p>
             )}
 
+            {/* Safe Action Buttons (Watch Trailer & Check Streaming) */}
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={trailerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-accent-red px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-accent-red/30 transition hover:bg-accent-red-dark md:text-lg"
+              >
+                <Play className="h-5 w-5 fill-white" /> Watch Trailer
+              </a>
+              <a
+                href={searchAvailabilityUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3.5 text-base font-bold text-white transition hover:bg-white/20 md:text-lg"
+              >
+                <Search className="h-5 w-5" /> Check Availability
+              </a>
+            </div>
+
             {isTv && details?.seasons && details.seasons.length > 0 && (
-              <div className="mt-4">
+              <div className="mt-6">
                 <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                   Seasons
                 </h3>
@@ -249,25 +264,6 @@ export function MovieModal({ movie, onClose, onRequireAuth }: Props) {
               </div>
             )}
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={watchUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-accent-red px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-accent-red/30 transition hover:bg-accent-red-dark hover:shadow-accent-red/50 md:text-lg"
-              >
-                <Play className="h-5 w-5 fill-white" /> Watch (Server 1)
-              </a>
-              <a
-                href={downloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-green-600 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-green-600/30 transition hover:bg-green-500 hover:shadow-green-600/50 md:text-lg"
-              >
-                <Download className="h-5 w-5" /> Download (HD)
-              </a>
-            </div>
-
             {cast.length > 0 && (
               <div className="mt-8">
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/50">
@@ -296,6 +292,7 @@ export function MovieModal({ movie, onClose, onRequireAuth }: Props) {
               </div>
             )}
 
+            {/* Comments Section */}
             <div className="mt-8">
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/50">
                 Comments
