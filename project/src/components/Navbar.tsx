@@ -1,4 +1,4 @@
-import { Search, Settings, Bell, Bookmark, X, Menu, Users } from 'lucide-react';
+import { Search, Settings, Bell, Bookmark, X, Menu, Users, UserPlus, Sparkles } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import type { Genre } from '../types';
 
@@ -17,6 +17,7 @@ interface NavbarProps {
   hasApiKey: boolean;
   page: Page;
   onNavigate: (page: Page) => void;
+  onRequestSignIn?: (action?: string) => void;
 }
 
 export default function Navbar({
@@ -32,6 +33,7 @@ export default function Navbar({
   hasApiKey,
   page,
   onNavigate,
+  onRequestSignIn,
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -70,7 +72,10 @@ export default function Navbar({
           <button className="md:hidden" onClick={() => setMobileMenu(!mobileMenu)}>
             <Menu className="w-6 h-6 text-white" />
           </button>
-          <h1 className="font-display text-2xl md:text-3xl tracking-wider text-accent-red text-glow leading-none">
+          <h1 
+            onClick={() => onNavigate('home')}
+            className="font-display text-2xl md:text-3xl tracking-wider text-accent-red text-glow leading-none cursor-pointer"
+          >
             GLOBAL CINEMA
           </h1>
           <span className="hidden md:inline text-[10px] uppercase tracking-[0.3em] text-cinema-fog mt-1">Hub</span>
@@ -181,6 +186,19 @@ export default function Navbar({
             )}
           </button>
 
+          {/* 🚀 New Gradient "JOIN" Button */}
+          <button
+            onClick={() => (onRequestSignIn ? onRequestSignIn('join') : onOpenSettings())}
+            className="relative group overflow-hidden rounded-full bg-gradient-to-r from-accent-red via-red-500 to-amber-500 p-[1px] font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-accent-red/40"
+          >
+            <span className="flex items-center gap-1.5 rounded-full bg-black/90 px-3 py-1.5 text-xs font-bold transition-all duration-300 group-hover:bg-transparent">
+              <UserPlus className="w-3.5 h-3.5 text-accent-red group-hover:text-white transition-colors" />
+              <span className="hidden sm:inline">Join Now</span>
+              <span className="sm:hidden">Join</span>
+              <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />
+            </span>
+          </button>
+
           {/* Avatar — click to add your own movie */}
           <button
             onClick={onOpenAddMovie}
@@ -196,13 +214,13 @@ export default function Navbar({
       {mobileMenu && (
         <div className="md:hidden glass border-t border-cinema-ash/30 animate-slideUp">
           <div className="px-4 py-4 space-y-3">
-            <button onClick={() => onNavigate('home')} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">Home</button>
-            <button onClick={() => onNavigate('community')} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">Community</button>
+            <button onClick={() => { onNavigate('home'); setMobileMenu(false); }} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">Home</button>
+            <button onClick={() => { onNavigate('community'); setMobileMenu(false); }} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">Community</button>
             <div className="py-2">
               <p className="text-xs uppercase tracking-wider text-cinema-fog mb-2">Genres</p>
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={() => onGenreSelect(null)}
+                  onClick={() => { onGenreSelect(null); setMobileMenu(false); }}
                   className={`px-3 py-1 rounded-full text-xs ${
                     selectedGenre === null ? 'bg-accent-red text-white' : 'bg-cinema-graphite text-white/70'
                   }`}
@@ -212,7 +230,7 @@ export default function Navbar({
                 {genres.slice(0, 8).map((g) => (
                   <button
                     key={g.id}
-                    onClick={() => onGenreSelect(g.id)}
+                    onClick={() => { onGenreSelect(g.id); setMobileMenu(false); }}
                     className={`px-3 py-1 rounded-full text-xs ${
                       selectedGenre === g.id ? 'bg-accent-red text-white' : 'bg-cinema-graphite text-white/70'
                     }`}
@@ -222,8 +240,8 @@ export default function Navbar({
                 ))}
               </div>
             </div>
-            <button onClick={() => onNavigate('home')} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">New & Popular</button>
-            <button onClick={onOpenWatchlist} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">My List</button>
+            <button onClick={() => { onNavigate('home'); setMobileMenu(false); }} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">New & Popular</button>
+            <button onClick={() => { onOpenWatchlist(); setMobileMenu(false); }} className="block w-full text-left text-white/90 hover:text-accent-red py-2 font-medium">My List</button>
           </div>
         </div>
       )}
